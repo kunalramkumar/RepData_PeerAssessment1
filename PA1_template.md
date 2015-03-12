@@ -92,6 +92,12 @@ activity_means <- sqldf('SELECT     a.*, am.meansteps
                          FROM       activity a
                          INNER JOIN activity_means am
                          ON         a.interval = am.interval')
+```
+
+Each missing value of step is imputed with the mean of all steps taken across the interval
+
+
+```r
 # Create a new dataset that is equal to the original dataset but with the missing data filled in
 activity_means$steps[is.na(activity_means$steps)] = activity_means$meansteps
 activity_means <- activity_means[,1:3]
@@ -122,6 +128,7 @@ paste("Median of the total number of steps per day = ", median(total_new$steps_p
 ```r
 # Do these values differ from the estimates from the first part of the assignment? What is the impact of imputing missing data on the estimates of the total daily number of steps?
 ```
+
 There isn't much of a difference with the imputed values. The mean remains the same where as the median changes slightly. The median now tends towards the mean since mean of each interval is the value used for imputing the missing values for each day.
 
 ## Are there differences in activity patterns between weekdays and weekends?
@@ -130,7 +137,7 @@ There isn't much of a difference with the imputed values. The mean remains the s
 activity_means$daytype <- as.factor(ifelse(weekdays(activity_means$date) %in% c("Saturday", "Sunday"),"weekend", "weekday"))
 daily_average_new <- activity_means %>% group_by(interval, daytype) %>% summarise(avg_steps_per_day = mean(steps))
 library(lattice)
-xyplot(avg_steps_per_day ~ interval | daytype, data = daily_average_new, type = "l", main = "Average number of steps taken, across weekdays & weekends ", xlab = "5-minute interval", ylab = "Average number of steps taken")
+xyplot(avg_steps_per_day ~ interval | daytype, data = daily_average_new, type = "l", main = "Average number of steps taken across weekdays & weekends ", xlab = "5-minute interval", ylab = "Average number of steps taken")
 ```
 
 ![](PA1_template_files/figure-html/Step5-1.png) 
